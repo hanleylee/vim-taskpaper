@@ -23,30 +23,32 @@ endif
 
 syn case ignore
 
-syn match taskpaperComment   /^.*$/ contains=taskpaperContext
-syn match taskpaperProject   /^.\+:\(\s\+@[^ \t(]\+\(([^)]*)\)\?\)*$/ contains=taskpaperContext
-syn match taskpaperListItem  /^\t*-\s\+/
-syn match taskpaperContext   /\s\zs@[^ \t(]\+\(([^)]*)\)\?/
-syn match taskpaperToday     /@today/
-syn match taskpaperUrgent    /@urgent/
-syn match taskpaperDone      /^.*\s@done\(\(\s\|([^)]*)\).*\)\?$/ contains=taskpaperToday,taskpaperUrgent
-syn match taskpaperCancelled /^.*\s@cancelled\(\(\s\|([^)]*)\).*\)\?$/ contains=taskpaperToday,taskpaperUrgent
+syn match TaskPaperNote         /^.*$/ contains=taskpaperContext,TaskPaperURL
+syn match TaskPaperProject      /^.\+:\(\s\+@[^ \t(]\+\(([^)]*)\)\?\)*$/ contains=taskpaperContext
+syn match TaskPaperListItem     /^\t*-\s\+/
+syn match TaskPaperContext      /\s\zs@[^ \t(]\+\(([^)]*)\)\?/
+syn match TaskPaperToday        /@due(today)/
+syn match TaskPaperUrgent       /@urgent/
+syn match TaskPaperDone         /^.*\s@done\(\(\s\|([^)]*)\).*\)\?$/ contains=taskpaperToday,taskpaperUrgent
+syn match TaskPaperCancelled    /^.*\s@cancelled\(\(\s\|([^)]*)\).*\)\?$/ contains=taskpaperToday,taskpaperUrgent
+syn match TaskPaperURL          /https\?:\/\/\(\w\+\(:\w\+\)\?@\)\?\([A-Za-z0-9][-_0-9A-Za-z]*\.\)\{1,}\(\w\{2,}\.\?\)\{1,}\(:[0-9]\{1,5}\)\?[^] \t]*/
 
 syn sync fromstart
 
 "highlighting for Taskpaper groups
-HiLink taskpaperListItem      Identifier
-HiLink taskpaperContext       String
-HiLink taskpaperToday         Search
-HiLink taskpaperUrgent        ErrorMsg
-HiLink taskpaperProject       Title
-HiLink taskpaperDone          Comment
-HiLink taskpaperCancelled     Comment
-HiLink taskpaperComment       Comment
+HiLink TaskPaperProject         Keyword
+HiLink TaskPaperListItem        Identifier
+HiLink TaskPaperNote            Comment
+HiLink TaskPaperToday           Todo
+HiLink TaskPaperUrgent          Error
+HiLink TaskPaperDone            Comment
+HiLink TaskPaperCancelled       Comment
+HiLink TaskPaperContext         Operator
+HiLink TaskPaperURL             mkdLink
 
 call taskpaper#tag_style_dict(g:task_paper_styles)
 
-let b:current_syntax = "taskpaper"
+let b:current_syntax = 'taskpaper'
 
 delcommand HiLink
 " vim: ts=8

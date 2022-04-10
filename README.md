@@ -6,7 +6,7 @@ From the TaskPaper website (<http://hogbaysoftware.com/projects/taskpaper>):
 
 "TaskPaper is a simple to-do list application that helps you stay
 organized. Unlike competing applications, TaskPaper is based on plain text
-files which offer you paper-like simplicity and ease of use." 
+files which offer you paper-like simplicity and ease of use."
 
 TaskPaper is a to-do list application for Mac OS X based on the "Getting
 Things Done" approach of David Allen (<http://www.davidco.com/>). It supports

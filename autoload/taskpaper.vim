@@ -4,10 +4,10 @@
 " URL:          https://github.com/davidoc/taskpaper.vim
 " Last Change:  2012-03-07
 
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
-function! s:add_delete_tag(tag, value, add)
+function! s:add_or_delete_tag(tag, value, add)
     let cur_line = getline(".")
 
     let tag = " @" . a:tag
@@ -27,8 +27,7 @@ function! s:add_delete_tag(tag, value, add)
         if a:value != ''
             let new_line = substitute(cur_line, '\V' . tag, "", "g")
         else
-            let new_line = substitute(cur_line, '\V' . tag . '\v(\([^)]*\))?',
-            \                         "", "g")
+            let new_line = substitute(cur_line, '\V' . tag . '\v(\([^)]*\))?', "", "g")
         endif
 
         call setline(".", new_line)
@@ -39,12 +38,12 @@ endfunction
 
 function! taskpaper#add_tag(tag, ...)
     let value = a:0 > 0 ? a:1 : input('Value: ')
-    return s:add_delete_tag(a:tag, value, 1)
+    return s:add_or_delete_tag(a:tag, value, 1)
 endfunction
 
 function! taskpaper#delete_tag(tag, ...)
     let value = a:0 > 0 ? a:1 : ''
-    return s:add_delete_tag(a:tag, value, 0)
+    return s:add_or_delete_tag(a:tag, value, 0)
 endfunction
 
 function! taskpaper#swap_tag(oldtag, newtag)
@@ -75,6 +74,7 @@ function! taskpaper#has_tag(tag)
         return 1
     else
         return 0
+    endif
 endfunction
 
 function! taskpaper#cycle_tags(...)
@@ -445,6 +445,33 @@ function! taskpaper#search(...)
     setlocal foldmethod=expr foldlevel=0 foldenable
 endfunction
 
+function! taskpaper#fold_today()
+    let line = getline(v:lnum)
+    let level = foldlevel(v:lnum)
+    let today_in_iso = taskpaper#date()
+    let today_in_week = strftime('%a')
+    let matched_str = matchstr(line, '\s@due(\zs.\{-}\ze)')
+
+    let has_matched = (matched_str !=# '')
+    let is_not_done = (line !~? '\<@done\>')
+    let is_today = (matched_str ==? 'today') || (matched_str ==? today_in_week) || (matched_str ==? today_in_iso)
+    let is_before_today = (matched_str <? today_in_iso)
+
+    if has_matched && is_not_done && (is_before_today || is_today)
+        return 0
+    elseif level != -1
+        return level
+    endif
+
+    return 1
+endfunction
+
+function! taskpaper#search_today()
+    setlocal foldexpr=taskpaper#fold_today()
+    setlocal foldminlines=0 foldtext=''
+    setlocal foldmethod=expr foldlevel=0 foldenable
+endfunction
+
 function! taskpaper#fold_except_range(lnum, begin, end)
     if a:lnum > a:end
         return 1
@@ -521,8 +548,7 @@ function! taskpaper#newline()
     let lnum = line('.')
     let line = getline('.')
 
-    if lnum == 1 || line !~ '^\s*$' ||
-    \  synIDattr(synID(lnum - 1, 1, 1), "name") != 'taskpaperProject'
+    if lnum == 1 || line !~ '^\s*$' || synIDattr(synID(lnum - 1, 1, 1), "name") != 'taskpaperProject'
         return ''
     endif
 
@@ -561,4 +587,4 @@ function! taskpaper#tag_style_dict(tsd)
     endfor
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
