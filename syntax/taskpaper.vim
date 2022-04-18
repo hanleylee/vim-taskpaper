@@ -4,17 +4,11 @@
 " URL:		https://github.com/davidoc/taskpaper.vim
 " Last Change:  2012-03-07
 
-if version < 600
-  syntax clear
-elseif exists("b:current_syntax")
+if exists('b:current_syntax')
   finish
 endif
 
-if version < 508
-  command! -nargs=+ HiLink hi link <args>
-else
-  command! -nargs=+ HiLink hi def link <args>
-endif
+command! -nargs=+ HiLink hi def link <args>
 
 " Define tag styles
 if !exists('g:task_paper_styles')
@@ -51,4 +45,4 @@ call taskpaper#tag_style_dict(g:task_paper_styles)
 let b:current_syntax = 'taskpaper'
 
 delcommand HiLink
-" vim: ts=8
+" vim: ts=4
