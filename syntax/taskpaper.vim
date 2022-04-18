@@ -23,14 +23,14 @@ endif
 
 syn case ignore
 
-syn match TaskPaperNote         /^.*$/ contains=taskpaperContext,TaskPaperURL
+syn match TaskPaperNote         /^.*$/ contains=TaskPaperURL
 syn match TaskPaperProject      /^.\+:\(\s\+@[^ \t(]\+\(([^)]*)\)\?\)*$/ contains=taskpaperContext
-syn match TaskPaperListItem     /^\t*-\s\+/
+syn match TaskPaperListItem     /^\t*-\s\+/ contains=TaskPaperURL
 syn match TaskPaperContext      /\s\zs@[^ \t(]\+\(([^)]*)\)\?/
 syn match TaskPaperToday        /@due(today)/
 syn match TaskPaperUrgent       /@urgent/
-syn match TaskPaperDone         /^.*\s@done\(\(\s\|([^)]*)\).*\)\?$/ contains=taskpaperToday,taskpaperUrgent
-syn match TaskPaperCancelled    /^.*\s@cancelled\(\(\s\|([^)]*)\).*\)\?$/ contains=taskpaperToday,taskpaperUrgent
+syn match TaskPaperDone         /^.*\s@done\(\(\s\|([^)]*)\).*\)\?$/
+syn match TaskPaperCancelled    /^.*\s@cancelled\(\(\s\|([^)]*)\).*\)\?$/
 syn match TaskPaperURL          /https\?:\/\/\(\w\+\(:\w\+\)\?@\)\?\([A-Za-z0-9][-_0-9A-Za-z]*\.\)\{1,}\(\w\{2,}\.\?\)\{1,}\(:[0-9]\{1,5}\)\?[^] \t]*/
 
 syn sync fromstart
