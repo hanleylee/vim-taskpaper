@@ -570,11 +570,7 @@ function! taskpaper#tag_style(...)
         let tag_style_name = 'taskpaperAutoStyle_' . tag_name
         execute 'syn match' tag_style_name  '/\s\zs@'.tag_name.'\(([^)]*)\)\?/'
         execute 'hi' tag_style_name tag_style
-        if version < 508
-            execute 'hi link'  tag_style_name tag_style_name
-        else
-            execute 'hi def link' tag_style_name tag_style_name
-        endif
+        execute 'hi def link' tag_style_name tag_style_name
     else
         echo "No style specified."
         return ''
